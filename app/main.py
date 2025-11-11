@@ -1,28 +1,27 @@
-from typing import Callable
+from typing import Callable, Any, Tuple, List
 
 
 def cache(func: Callable) -> Callable:
     saved_results = {}
 
-
-    def wrapper(*args):
+    def wrapper(*args: Tuple[Any, ...]) -> Any:
         if args in saved_results:
             print("Getting from cache")
             return saved_results[args]
-        else:
-            print("Calculating new result")
-            result = func(*args)
-            saved_results[args] = result
-            return result
+
+        print("Calculating new result")
+        result = func(*args)
+        saved_results[args] = result
+        return result
 
     return wrapper
 
 
 @cache
-def long_time_func(a: int, b: int, c: int) -> int:
-    return (a ** b ** c) % (a * c)
+def long_time_func(base: int, exponent: int, modulo_factor: int) -> int:
+    return (base ** exponent ** modulo_factor) % (base * modulo_factor)
 
 
 @cache
-def long_time_func_2(n_tuple: tuple, power: int) -> list:
-    return [number ** power for number in n_tuple]
+def long_time_func_2(numbers: Tuple[int, ...], power: int) -> List[int]:
+    return [number ** power for number in numbers]
